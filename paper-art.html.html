@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Art</title>
+</head>
+<body>
+    <style>
+        .carousel-container {
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .carousel img.active {
+            opacity: 1;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+            font-size: 1.5rem; /* Larger touch target */
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 2;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            width: 50px; /* Larger touch target */
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('Media/drive-download-20241206T174922Z-001/mainSiteBgPic/bgPic.JPG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            touch-action: manipulation; /* Disable double-tap zoom */
+        }
+
+        @media (max-width: 768px) {
+            .carousel-container {
+                height: calc(100vh - 60px); /* Account for mobile nav */
+            }
+
+            .carousel-button {
+                padding: 15px; /* Larger padding for mobile */
+            }
+
+            /* Ensure buttons are more visible on mobile */
+            .carousel-button, .close-button {
+                background: rgba(0, 0, 0, 0.7);
+            }
+        }
+    </style>
+
+    <div class="carousel-container">
+        <button class="close-button" onclick="window.parent.document.getElementById('iframeContainer').style.display = 'none'">×</button>
+        <button class="carousel-button prev" onclick="moveCarousel(-1)">❮</button>
+        <div class="carousel">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa1.jpg" alt="Image 1" class="active">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa2.jpg" alt="Image 2">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa3.jpg" alt="Image 3">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa4.jpg" alt="Image 4">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa5.jpg" alt="Image 5">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa6.jpg" alt="Image 6">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa7.jpg" alt="Image 7">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa8.jpg" alt="Image 8">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa9.jpg" alt="Image 9">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa10.jpg" alt="Image 10">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa11.png" alt="Image 11">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa12.jpg" alt="Image 12">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa13.jpg" alt="Image 13">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa14.webp" alt="Image 14">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa15.heic" alt="Image 15">
+            <img src="Media/drive-download-20241206T174922Z-001/paperArt/pa16.png" alt="Image 16">
+        </div>
+        <button class="carousel-button next" onclick="moveCarousel(1)">❯</button>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.carousel img');
+        const totalImages = images.length;
+
+        function moveCarousel(direction) {
+            images[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + direction + totalImages) % totalImages;
+            images[currentIndex].classList.add('active');
+        }
+
+        // Add touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.querySelector('.carousel-container').addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.querySelector('.carousel-container').addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const swipeThreshold = 50; // minimum distance for swipe
+            const difference = touchStartX - touchEndX;
+            
+            if (Math.abs(difference) > swipeThreshold) {
+                if (difference > 0) {
+                    // Swipe left
+                    moveCarousel(1);
+                } else {
+                    // Swipe right
+                    moveCarousel(-1);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
